@@ -63,25 +63,48 @@ import sqlite3
 #         if conexao:
 #             conexao.close
 
-def atualizar_disponibilidade(id_livro):
+# def atualizar_disponibilidade(id_livro):
+#     try:
+#         conexao = sqlite3.connect("biblioteca.db")
+#         cursor = conexao.cursor()
+
+#         cursor.execute("SELECT disponivel FROM livros WHERE id = ?", (id_livro,))
+#         resultado = cursor.fetchone()
+#         if resultado[0] == "sim":
+#             novo_status = "não"
+#         else:
+#             novo_status = "sim"
+
+#         cursor.execute("UPDATE livros SET disponivel = ? WHERE id = ?", (novo_status, id_livro))
+#         conexao.commit()
+#     except Exception as erro:
+#         print(f"ocorreu um erro {erro}")
+#     finally:
+#         conexao.close
+
+
+# livro_id = input("Digite o ID do livro que deseja atualizar: ")
+# atualizar_disponibilidade(livro_id)
+
+def deletar_livros(id_livro):
     try:
         conexao = sqlite3.connect("biblioteca.db")
         cursor = conexao.cursor()
 
-        cursor.execute("SELECT disponivel FROM livros WHERE id = ?", (id_livro,))
-        resultado = cursor.fetchone()
-        if resultado[0] == "sim":
-            novo_status = "não"
-        else:
-            novo_status = "sim"
+        cursor.execute("DELETE FROM livros WHERE id = ?", (id_livro,))
 
-        cursor.execute("UPDATE livros SET disponivel = ? WHERE id = ?", (novo_status, id_livro))
         conexao.commit()
+
+        if cursor.rowcount > 0:
+            print("O livro foi removido com sucesso!")
+        else:
+            print("Nenhum livro foi encontrado com o id fornecido.")
+
     except Exception as erro:
-        print(f"ocorreu um erro {erro}")
+        print(f"erro ao tentar excluir livro {erro}")
     finally:
-        conexao.close
+        if conexao:
+            conexao.close()
 
-
-livro_id = input("Digite o ID do livro que deseja atualizar: ")
-atualizar_disponibilidade(livro_id)
+deletar = input("Digite o id do livro que deseja remover: ")
+deletar_livros(deletar)
